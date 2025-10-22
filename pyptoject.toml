@@ -8,6 +8,7 @@ dependencies = [
     "blinker",
     "click",
     "Flask",
+    Flask-Migrate,
     "Flask-SQLAlchemy",
     "greenlet",
     "itsdangerous",
