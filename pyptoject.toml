@@ -5,22 +5,28 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "blinker",
-    "click",
-    "Flask",
-    Flask-Migrate,
-    "Flask-SQLAlchemy",
-    "greenlet",
-    "itsdangerous",
-    "Jinja2",
-    "MarkupSafe",
-    "marshmallow",
-    "marshmallow-sqlalchemy",
-    "PyMySQL",
-    "SQLAlchemy",
-    "typing_extensions",
-    "Werkzeug",
-    "bcrypt<4.0",
-    "Flask-JWT-Extended",
-    "passlib[bcrypt]==1.7.4"
+    alembic
+    backports-datetime-fromisoformat
+    bcrypt
+    blinker
+    cffi
+    click
+    Flask
+    Flask-JWT-Extended
+    Flask-Migrate
+    Flask-SQLAlchemy
+    greenlet
+    itsdangerous
+    Jinja2
+    Mako
+    MarkupSafe
+    marshmallow
+    marshmallow-sqlalchemy
+    passlib
+    pycparser
+    PyJWT
+    PyMySQL
+    SQLAlchemy
+    typing_extensions
+    Werkzeug
 ]

@@ -1,14 +1,10 @@
-from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
+from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
-from models import (
-    db,
-    user,
-    user_credential,
-    entry,
-    comment,
-    category
-)
+
+from models import db
+
+from views.UserRegisterAPI import UserRegisterAPI
 
 
 app = Flask(__name__)
@@ -19,9 +15,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 app.config['SQLALCHEMY_TRACK_NOTIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'cualquier-cosa-re-dificl-espero-aprobar-jajajajaj'
 
+jwt = JWTManager(app)
 db.init_app(app)
 migrate = Migrate(app, db)
 
-@app.route('/')
-def index():
-    return 'Hello Fucking World'
+app.add_url_rule(
+    '/register',
+    view_func=UserRegisterAPI.as_view("register_api"),
+    methods=['POST']
+)

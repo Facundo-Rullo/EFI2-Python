@@ -1,6 +1,5 @@
 from . import db  # Importamos 'db' desde el __init__.py
 from datetime import datetime
-
 class User(db.Model):
     __tablename__ = "user"
     
