@@ -1,23 +1,31 @@
-from datetime import timedelta
 from flask import request, jsonify
 from marshmallow import ValidationError
 from flask.views import MethodView
-
-from passlib.hash import bcrypt
 from flask_jwt_extended import ( 
-    create_access_token,
     jwt_required,
 )
 
-from schemas.UserCredentialSchema import UserCredentialSchema
-from schemas.UserSchema import UserSchema
 
 from models import db
+from models.user import User
 from models.user_credential import UserCredential
+from models.entry import Entry
+from models.comment import Comment
+from models.category import Category
+
+from schemas.UserSchema import UserSchema
+from schemas.UserCredentialSchema import UserCredentialSchema
 
 from decorators.RoleRequired import role_required
 
-class UpdateRoleAPI(MethodView):
+class UsersAPI(MethodView):
+    @jwt_required()
+    @role_required("admin", "moderator", "user")
+    def get(self):
+        users = User.query.all()
+        return UserSchema(many=True).dump(users)
+    
+    
     @jwt_required()
     @role_required("admin")
     def patch(self, user_id):
@@ -31,4 +39,3 @@ class UpdateRoleAPI(MethodView):
             return UserSchema().dump(credentials.user)
         except ValidationError as err: 
             return jsonify({"Error": err.messages})
-        
