@@ -20,7 +20,7 @@ from decorators.RoleRequired import role_required
 
 class UsersAPI(MethodView):
     @jwt_required()
-    @role_required("admin", "moderator", "user")
+    @role_required("admin")
     def get(self):
         users = User.query.all()
         return UserSchema(many=True).dump(users)
