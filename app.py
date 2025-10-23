@@ -7,6 +7,7 @@ from models import db
 from views.UserRegisterAPI import UserRegisterAPI
 from views.UserLoginAPI import UserLoginAPI
 from views.ListUsersAPI import ListUsersAPI
+from views.ListOneUserAPI import ListOneUserAPI
 from views.UpdateRoleAPI import UpdateRoleAPI
 
 
@@ -40,11 +41,11 @@ app.add_url_rule(
     methods=['GET']
 )
 
-# app.add_url_rule(
-#     '/users/<int:user_id>',
-#     # view_func=UsersAPI.as_view("user_api"),
-#     methods=['GET']
-# )
+app.add_url_rule(
+    '/users/<int:user_id>',
+    view_func=ListOneUserAPI.as_view("one_user_api"),
+    methods=['GET']
+)
 
 app.add_url_rule(
     '/users/<int:user_id>/role',
