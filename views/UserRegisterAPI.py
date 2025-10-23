@@ -38,4 +38,4 @@ class UserRegisterAPI(MethodView):
         db.session.add(credentials)
         db.session.commit()
         
-        return UserSchema().dump(new_user)
+        return UserSchema().dump(new_user) #Consultar si esta bien delvolver esto

@@ -34,7 +34,7 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
-    '/updateRole/<int:user_id>',
+    '/users/<int:user_id>/role',
     view_func=UpdateRoleAPI.as_view("update_role_api"),
-    methods=['PUT']
+    methods=['PATCH']
 )

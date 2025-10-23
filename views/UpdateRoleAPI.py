@@ -20,11 +20,12 @@ from decorators.RoleRequired import role_required
 class UpdateRoleAPI(MethodView):
     @jwt_required()
     @role_required("admin")
-    def put(self, user_id):
+    def patch(self, user_id):
         credentials = UserCredential.query.filter_by(user_id=user_id).first_or_404()
         try:
-            data = UserCredentialSchema().load(request.json) 
-            credentials.role = data.get("role")
+            data = UserCredentialSchema(partial=True).load(request.json) 
+            if 'role' in data:
+                credentials.role = data.get("role")
             
             db.session.commit()
             return UserSchema().dump(credentials.user)
