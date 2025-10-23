@@ -18,14 +18,7 @@ from schemas.UserCredentialSchema import UserCredentialSchema
 
 from decorators.RoleRequired import role_required
 
-class UsersAPI(MethodView):
-    @jwt_required()
-    @role_required("admin")
-    def get(self):
-        users = User.query.all()
-        return UserSchema(many=True).dump(users)
-    
-    
+class UpdateRoleAPI(MethodView):
     @jwt_required()
     @role_required("admin")
     def patch(self, user_id):

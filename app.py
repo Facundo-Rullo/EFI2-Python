@@ -6,7 +6,8 @@ from models import db
 
 from views.UserRegisterAPI import UserRegisterAPI
 from views.UserLoginAPI import UserLoginAPI
-from views.UsersAPI import UsersAPI
+from views.ListUsersAPI import ListUsersAPI
+from views.UpdateRoleAPI import UpdateRoleAPI
 
 
 app = Flask(__name__)
@@ -35,12 +36,18 @@ app.add_url_rule(
 
 app.add_url_rule(
     '/users',
-    view_func=UsersAPI.as_view("users_api"),
+    view_func=ListUsersAPI.as_view("users_api"),
     methods=['GET']
 )
 
+# app.add_url_rule(
+#     '/users/<int:user_id>',
+#     # view_func=UsersAPI.as_view("user_api"),
+#     methods=['GET']
+# )
+
 app.add_url_rule(
     '/users/<int:user_id>/role',
-    view_func=UsersAPI.as_view("update_role_api"),
+    view_func=UpdateRoleAPI.as_view("update_role_api"),
     methods=['PATCH']
 )
