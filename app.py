@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from models import db
 
 from views.UserRegisterAPI import UserRegisterAPI
+from views.UserLoginAPI import UserLoginAPI
 
 
 app = Flask(__name__)
@@ -22,5 +23,11 @@ migrate = Migrate(app, db)
 app.add_url_rule(
     '/register',
     view_func=UserRegisterAPI.as_view("register_api"),
+    methods=['POST']
+)
+
+app.add_url_rule(
+    '/login',
+    view_func=UserLoginAPI.as_view("login_api"),
     methods=['POST']
 )
