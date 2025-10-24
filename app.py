@@ -10,9 +10,8 @@ from views.AuthAPI import (
 )
 from views.UsersAPI import (
     ListUsersAPI,
-    ListOneUserAPI,
+    OneUserAPI,
     UpdateRoleAPI,
-    DeleteUserAPI
 )
 
 app = Flask(__name__)
@@ -47,8 +46,8 @@ app.add_url_rule(
 
 app.add_url_rule(
     '/api/users/<int:user_id>',
-    view_func=ListOneUserAPI.as_view("one_user_api"),
-    methods=['GET']
+    view_func=OneUserAPI.as_view("one_user_api"),
+    methods=['GET', 'PATCH']
 )
 
 app.add_url_rule(
@@ -57,8 +56,3 @@ app.add_url_rule(
     methods=['PATCH']
 )
 
-# app.add_url_rule(
-#     '/api/users/<int:user_id>/delete',
-#     view_func=DeleteUserAPI.as_view("delete_role_api"),
-#     methods=['PATCH']
-# )

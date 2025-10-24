@@ -23,16 +23,30 @@ class ListUsersAPI(MethodView):
     @jwt_required()
     @role_required("admin")
     def get(self):
-        users = User.query.all()
+        users = User.query.filter_by(is_active=True).all()
         return UserSchema(many=True).dump(users) 
     
     
-class ListOneUserAPI(MethodView):
+class OneUserAPI(MethodView):
     @jwt_required()
     @role_required("admin", "user")
     def get(self, user_id):
         users = User.query.get_or_404(user_id)
         return UserSchema().dump(users) 
+    
+    @jwt_required()
+    @role_required("admin")
+    def patch(self, user_id):
+        user = User.query.get_or_404(user_id)
+        try:
+            data = UserSchema(partial=True).load(request.json) 
+            if 'is_active' in data:
+                user.is_active = data.get("is_active")
+            
+            db.session.commit()
+            return jsonify({"message": "Usuario eliminado correctamente"})
+        except ValidationError as err: 
+            return jsonify({"Error": err.messages})
     
        
 class UpdateRoleAPI(MethodView):
@@ -50,17 +64,3 @@ class UpdateRoleAPI(MethodView):
         except ValidationError as err: 
             return jsonify({"Error": err.messages})
         
-class DeleteUserAPI(MethodView):
-    @jwt_required()
-    @role_required("admin")
-    def path(self, user_id):
-        user = User.query.first_or_404(user_id)
-        try:
-            data = UserSchema(partial=True).load(request.json) 
-            if 'is_ative' in data:
-                user.is_active = data.get("is_ative")
-            
-            db.session.commit()
-            return jsonify({"message": "Usuario eliminado correctamente"})
-        except ValidationError as err: 
-            return jsonify({"Error": err.messages})

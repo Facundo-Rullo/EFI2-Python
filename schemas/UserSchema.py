@@ -5,8 +5,8 @@ class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     username = fields.Str(required=True)
     email = fields.Email(required=True)
-    created_at = fields.DateTime(dump_only=True)
-    is_active = fields.Boolean(dump_only=True)
+    created_at = fields.DateTime(required=True)
+    is_active = fields.Boolean(required=True)
     
     credential = fields.Nested(
         UserCredentialSchema,
@@ -15,3 +15,5 @@ class UserSchema(Schema):
     )
    
     #Actualizar esto despues para agregar las entradas y comentarios
+    
+    
