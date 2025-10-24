@@ -4,12 +4,16 @@ from flask_migrate import Migrate
 
 from models import db
 
-from views.UserRegisterAPI import UserRegisterAPI
-from views.UserLoginAPI import UserLoginAPI
-from views.ListUsersAPI import ListUsersAPI
-from views.ListOneUserAPI import ListOneUserAPI
-from views.UpdateRoleAPI import UpdateRoleAPI
-
+from views.AuthAPI import (
+    UserRegisterAPI,
+    UserLoginAPI
+)
+from views.UsersAPI import (
+    ListUsersAPI,
+    ListOneUserAPI,
+    UpdateRoleAPI,
+    DeleteUserAPI
+)
 
 app = Flask(__name__)
 
@@ -24,31 +28,37 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 app.add_url_rule(
-    '/register',
+    '/api/register',
     view_func=UserRegisterAPI.as_view("register_api"),
     methods=['POST']
 )
 
 app.add_url_rule(
-    '/login',
+    '/api/login',
     view_func=UserLoginAPI.as_view("login_api"),
     methods=['POST']
 )
 
 app.add_url_rule(
-    '/users',
+    '/api/users',
     view_func=ListUsersAPI.as_view("users_api"),
     methods=['GET']
 )
 
 app.add_url_rule(
-    '/users/<int:user_id>',
+    '/api/users/<int:user_id>',
     view_func=ListOneUserAPI.as_view("one_user_api"),
     methods=['GET']
 )
 
 app.add_url_rule(
-    '/users/<int:user_id>/role',
+    '/api/users/<int:user_id>/role',
     view_func=UpdateRoleAPI.as_view("update_role_api"),
     methods=['PATCH']
 )
+
+# app.add_url_rule(
+#     '/api/users/<int:user_id>/delete',
+#     view_func=DeleteUserAPI.as_view("delete_role_api"),
+#     methods=['PATCH']
+# )
