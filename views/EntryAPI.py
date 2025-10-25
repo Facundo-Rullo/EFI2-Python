@@ -25,7 +25,6 @@ class EntryAPI(MethodView):
     @jwt_required()
     @role_required("user")
     def post(self):
-        
         try:
             data = EntrySchema().load(request.json)
         except ValidationError as err:

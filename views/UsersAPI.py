@@ -22,7 +22,7 @@ from service.UserService import UserService
 
 class ListUsersAPI(MethodView):
     def __init__(self):
-            self.service = UserService()
+        self.service = UserService()
             
     @jwt_required()
     @role_required("admin")
@@ -33,7 +33,7 @@ class ListUsersAPI(MethodView):
     
 class OneUserAPI(MethodView):
     def __init__(self):
-            self.service = UserService()
+        self.service = UserService()
             
     @jwt_required()
     @role_required("admin", "user")
@@ -51,17 +51,24 @@ class OneUserAPI(MethodView):
             return jsonify({"Error": err.messages})
        
 class UpdateRoleAPI(MethodView):
+    def __init__(self):
+        self.service = UserService()
     @jwt_required()
     @role_required("admin")
     def patch(self, user_id):
-        credentials = UserCredential.query.filter_by(user_id=user_id).first_or_404()
         try:
             data = UserCredentialSchema(partial=True).load(request.json) 
-            if 'role' in data:
-                credentials.role = data.get("role")
-            
-            db.session.commit()
-            return UserSchema().dump(credentials.user)
+            new_role = data.get('role')
         except ValidationError as err: 
-            return jsonify({"Error": err.messages})
+            return jsonify({"Error": err.messages}), 400 
+        
+        try:
+            update_role = self.service.update_role(user_id, new_role)
+            return UserSchema().dump(update_role)
+        except ValueError as e: 
+            return jsonify({"Error": str(e)}), 500
+        except Exception as e: 
+            return jsonify({"error": str(e)}), 404
+            
+            
         

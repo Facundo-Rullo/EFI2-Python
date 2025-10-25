@@ -1,5 +1,6 @@
 from models import db
 from models.user import User
+from models.user_credential import UserCredential
 
 class UserRepository:
     @staticmethod
@@ -9,3 +10,8 @@ class UserRepository:
     @staticmethod
     def get_user_by_id(user_id: int) -> User:
         return User.query.get_or_404(user_id)
+    
+    @staticmethod
+    def get_credential_by_user_id(user_id: int):
+        return UserCredential.query.filter_by(user_id=user_id).first_or_404()
+    
