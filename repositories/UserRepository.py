@@ -15,3 +15,7 @@ class UserRepository:
     def get_credential_by_user_id(user_id: int):
         return UserCredential.query.filter_by(user_id=user_id).first_or_404()
     
+    @staticmethod
+    def get_email_by_user(email: str):
+        return User.query.filter_by(email=email).first()
+    

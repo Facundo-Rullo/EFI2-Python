@@ -19,6 +19,8 @@ from schemas.RegisterSchema import RegisterSchema
 from schemas.UserSchema import UserSchema
 from schemas.LoginSchema import LoginSchema
 
+from service.UserService import UserService
+
 class UserRegisterAPI(MethodView):
     def post(self):
         try:
@@ -48,13 +50,18 @@ class UserRegisterAPI(MethodView):
     
 
 class UserLoginAPI(MethodView):
+    def __init__(self):
+        self.service = UserService()
+        
     def post(self):
         try: 
             data = LoginSchema().load(request.json)
         except ValidationError as err:
             return {"Error": err.messages}
         
-        user = User.query.filter_by(email=data.get("email")).first()
+        verify_email = data.get("email")
+        user = self.service.get_email_user(verify_email)
+        # user = User.query.filter_by(email=data.get("email")).first()
         
         if not user or not user.credential:
             return jsonify({"Error": "El usuario no posee credenciales!"}), 409

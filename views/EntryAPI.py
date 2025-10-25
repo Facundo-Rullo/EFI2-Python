@@ -16,7 +16,7 @@ from service.EntryService import EntryService
 
 class EntryAPI(MethodView):
     def __init__(self):
-            self.service = EntryService()
+        self.service = EntryService()
             
     def get(self):
         entries = self.service.get_public_entries()

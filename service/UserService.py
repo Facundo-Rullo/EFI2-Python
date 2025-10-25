@@ -14,6 +14,9 @@ class UserService:
     def get_user_by_id(self, user_id: int):
         return self.repo.get_user_by_id(user_id)
     
+    def get_email_user(self, email: str):
+        return self.repo.get_email_by_user(email)
+    
     def update_role(self, user_id: int, new_role: str) -> User:
             
             credential = self.repo.get_credential_by_user_id(user_id)
