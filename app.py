@@ -14,6 +14,10 @@ from views.UsersAPI import (
     UpdateRoleAPI,
 )
 
+from views.EntryAPI import (
+    EntryAPI
+)
+
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
@@ -56,3 +60,8 @@ app.add_url_rule(
     methods=['PATCH']
 )
 
+app.add_url_rule(
+    '/api/entries',
+    view_func=EntryAPI.as_view("new_entry_api"),
+    methods=['GET', 'POST']
+)
