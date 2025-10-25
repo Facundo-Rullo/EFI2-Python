@@ -1,8 +1,9 @@
-from flask import jsonify
 from models import db
 from models.user import User
+from models.user_credential import UserCredential
 from repositories.UserRepository import UserRepository
 from sqlalchemy.exc import SQLAlchemyError
+from passlib.hash import bcrypt
 
 class UserService:
     def __init__(self):
@@ -28,6 +29,29 @@ class UserService:
             except SQLAlchemyError as e:
                 db.session.rollback()
                 raise ValueError(f"Error al actualizar el rol: {str(e)}")
+    
+    def register_user(self, data: dict) -> User:
+        email = data.get('email')
+        password = data.get('password')
+        username = data.get('username')
+
+        if self.repo.get_email_by_user(email):
+            raise ValueError("El email ya está en uso") 
+
+        new_user = User(username=username, email=email)
+
+        password_hash = bcrypt.hash(password)
+        credentials = UserCredential(password_hash=password_hash)
+        credentials.user = new_user
+
+        self.repo.add_user_with_credentials(new_user, credentials)
+
+        try:
+            db.session.commit()
+            return new_user 
+        except SQLAlchemyError as err:
+            db.session.rollback()
+            raise ValueError(f"Error al registrar el usuario: {str(err)}")
 
     def deactivate_user(self, user_id: int) -> User:
         user = self.repo.get_user_by_id(user_id)

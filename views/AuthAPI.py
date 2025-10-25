@@ -8,13 +8,6 @@ from flask_jwt_extended import (
     create_access_token,
 )
 
-from models import db
-from models.user import User
-from models.user_credential import UserCredential
-from models.entry import Entry
-from models.comment import Comment
-from models.category import Category
-
 from schemas.RegisterSchema import RegisterSchema
 from schemas.UserSchema import UserSchema
 from schemas.LoginSchema import LoginSchema
@@ -22,32 +15,27 @@ from schemas.LoginSchema import LoginSchema
 from service.UserService import UserService
 
 class UserRegisterAPI(MethodView):
+    def __init__(self):
+        self.service = UserService()
+        
     def post(self):
         try:
             data = RegisterSchema().load(request.json)
         except ValidationError as err:
-            return {"Error": err.messages}
+            return {"Erro2r": err.messages}, 400
+        try:
+            new_user = self.service.register_user(data)
+            return UserSchema().dump(new_user)
         
-        if User.query.filter_by(email=data.get('email')).first():
-            return jsonify({"Error": "Email en uso, ingrese otro!"}), 409
-
-        new_user = User(
-            username = data.get("username"),
-            email = data.get("email")
-        )
-        db.session.add(new_user)
-        db.session.flush()
-        
-        password_hash = bcrypt.hash(data.get("password"))
-        credentials = UserCredential(
-            user_id = new_user.id,
-            password_hash = password_hash
-        )
-        db.session.add(credentials)
-        db.session.commit()
-        
-        return UserSchema().dump(new_user) #Consultar si esta bien delvolver esto
-    
+        except ValueError as e: 
+            if "El email ya está en uso" in str(e):
+                return jsonify({"Error": str(e)}), 409
+            else: 
+                return jsonify({"Error": str(e)}), 500
+        except Exception as e: 
+            return jsonify({"Error": f"Error inesperado: {str(e)}"}), 500
+            
+                
 
 class UserLoginAPI(MethodView):
     def __init__(self):
@@ -61,7 +49,6 @@ class UserLoginAPI(MethodView):
         
         verify_email = data.get("email")
         user = self.service.get_email_user(verify_email)
-        # user = User.query.filter_by(email=data.get("email")).first()
         
         if not user or not user.credential:
             return jsonify({"Error": "El usuario no posee credenciales!"}), 409

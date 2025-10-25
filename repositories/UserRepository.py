@@ -19,3 +19,7 @@ class UserRepository:
     def get_email_by_user(email: str):
         return User.query.filter_by(email=email).first()
     
+    @staticmethod
+    def add_user_with_credentials(user: User, credential: UserCredential):
+        db.session.add(user)
+        db.session.add(credential)
