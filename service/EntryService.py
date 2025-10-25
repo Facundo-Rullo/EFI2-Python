@@ -19,7 +19,7 @@ class EntryService:
             return new_entry
         except Exception as e:
             db.session.rollback()
-            raise ValueError(f"Error al crear el post: {str(e)}") 
+            raise ValueError(f"Error al crear la entrada: {str(e)}") 
 
     
     def get_public_entries(self):

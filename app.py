@@ -51,7 +51,7 @@ app.add_url_rule(
 app.add_url_rule(
     '/api/users/<int:user_id>',
     view_func=OneUserAPI.as_view("one_user_api"),
-    methods=['GET', 'PATCH']
+    methods=['GET', 'PATCH', 'DELETE']
 )
 
 app.add_url_rule(

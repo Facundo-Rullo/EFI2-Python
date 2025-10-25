@@ -39,23 +39,16 @@ class OneUserAPI(MethodView):
     @role_required("admin", "user")
     def get(self, user_id):
         user = self.service.get_user_by_id(user_id)
-        # users = User.query.get_or_404(user_id)
         return UserSchema().dump(user) 
     
     @jwt_required()
-    @role_required("admin")
-    def patch(self, user_id):
-        user = User.query.get_or_404(user_id)
+    @role_required("admin") #Delete logico
+    def delete(self, user_id):
         try:
-            data = UserSchema(partial=True).load(request.json) 
-            if 'is_active' in data:
-                user.is_active = data.get("is_active")
-            
-            db.session.commit()
+            self.service.deactivate_user(user_id) 
             return jsonify({"message": "Usuario eliminado correctamente"})
         except ValidationError as err: 
             return jsonify({"Error": err.messages})
-    
        
 class UpdateRoleAPI(MethodView):
     @jwt_required()
