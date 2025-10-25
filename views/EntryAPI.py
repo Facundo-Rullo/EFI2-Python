@@ -35,18 +35,18 @@ class EntryAPI(MethodView):
         
         try:
             data = EntrySchema().load(request.json)
-            current_user_id = get_jwt_identity()
-            
-            new_entry = Entry(
-                title = data.get("title"),
-                content = data.get("content"),
-                user_id = current_user_id
-            )
-            db.session.add(new_entry)
-            db.session.commit()
         except ValidationError as err:
             return jsonify({"Error": err.messages})
-        return EntrySchema().dump(new_entry)
         
+        current_user_id = get_jwt_identity()
         
+        try: 
+            new_entry = self.service.create_entry(data, current_user_id)
+            return EntrySchema().dump(new_entry), 201
+        except ValueError as e:
+            return jsonify({"Error": str(e)}), 500
+        except Exception as e:
+            return jsonify({"Error": f"Error inesperado: {str(e)}"}), 500
         
+    
+    
