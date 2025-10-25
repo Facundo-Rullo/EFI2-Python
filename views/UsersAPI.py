@@ -18,21 +18,29 @@ from schemas.UserCredentialSchema import UserCredentialSchema
 
 from decorators.RoleRequired import role_required
 
+from service.UserService import UserService
 
 class ListUsersAPI(MethodView):
+    def __init__(self):
+            self.service = UserService()
+            
     @jwt_required()
     @role_required("admin")
     def get(self):
-        users = User.query.filter_by(is_active=True).all()
+        users = self.service.get_users_active()
         return UserSchema(many=True).dump(users) 
     
     
 class OneUserAPI(MethodView):
+    def __init__(self):
+            self.service = UserService()
+            
     @jwt_required()
     @role_required("admin", "user")
     def get(self, user_id):
-        users = User.query.get_or_404(user_id)
-        return UserSchema().dump(users) 
+        user = self.service.get_user_by_id(user_id)
+        # users = User.query.get_or_404(user_id)
+        return UserSchema().dump(user) 
     
     @jwt_required()
     @role_required("admin")

@@ -7,13 +7,6 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 
-from models import db
-from models.user import User
-from models.user_credential import UserCredential
-from models.entry import Entry
-from models.comment import Comment
-from models.category import Category
-
 from schemas.EntrySchema import EntrySchema
 from schemas.EntrySchema import EntrySchema
 
@@ -26,7 +19,7 @@ class EntryAPI(MethodView):
             self.service = EntryService()
             
     def get(self):
-        entries = self.service.get_public_posts()
+        entries = self.service.get_public_entries()
         return EntrySchema(many=True).dump(entries)
 
     @jwt_required()

@@ -22,5 +22,5 @@ class EntryService:
             raise ValueError(f"Error al crear el post: {str(e)}") 
 
     
-    def get_public_posts(self):
+    def get_public_entries(self):
         return self.repo.get_all_published()
